@@ -22,6 +22,7 @@ fn parse(input: &str) -> PageRules {
         .collect();
 
     page_rules.updates = lines
+        .filter(|line| !line.is_empty())
         .map(|line| {
             line.split(",")
                 .map(|page| {
