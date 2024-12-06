@@ -66,6 +66,11 @@ impl DependencyTable {
         let index = after * self.max_pages + before;
         self.table.set(index, value);
     }
+
+    fn get(&self, before: usize, after: usize) -> bool {
+        let index = after * self.max_pages + before;
+        self.table[index]
+    }
 }
 
 #[aoc(day5, part1)]
@@ -140,8 +145,8 @@ pub fn part2(input: &str) -> usize {
         update_table.table |= &dependency_table.table;
 
         if !update_table.table.all() {
-            sort_pages(update, &dependency_table);
-            let middle = update[update.len() / 2];
+            let sorted = sort_pages(update, &dependency_table);
+            let middle = sorted[sorted.len() / 2];
             total += middle;
         }
     }
@@ -149,7 +154,7 @@ pub fn part2(input: &str) -> usize {
     total
 }
 
-fn sort_pages(pages: &mut [usize], dependency_table: &DependencyTable) {
+fn sort_pages(pages: &[usize], dependency_table: &DependencyTable) -> Vec<usize> {
     let mut no_dependencies = Vec::<usize>::new();
     let mut dependency_counts = vec![0; dependency_table.max_pages];
 
@@ -176,19 +181,35 @@ fn sort_pages(pages: &mut [usize], dependency_table: &DependencyTable) {
         }
     }
 
-    let mut index = 0;
+    let mut sorted = Vec::with_capacity(pages.len());
 
     while let Some(page) = no_dependencies.pop() {
-        pages[index] = page;
-        index += 1;
+        sorted.push(page);
 
         for dependency in pages.iter() {
-            if dependency_table.table[dependency * dependency_table.max_pages + page] {
+            if !dependency_table.get(page, *dependency) {
                 dependency_counts[*dependency] -= 1;
                 if dependency_counts[*dependency] == 0 {
                     no_dependencies.push(*dependency);
                 }
             }
         }
+    }
+
+    sorted
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part2() {
+        assert_eq!(part2(include_str!("../input/2024/day5-example.txt")), 123);
+    }
+
+    #[test]
+    fn test_part2_minimal() {
+        part2(include_str!("../input/2024/day5-minimal.txt"));
     }
 }
