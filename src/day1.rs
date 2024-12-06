@@ -15,12 +15,15 @@ fn parse(input: &str) -> (Vec<u64>, Vec<u64>) {
 
 #[aoc(day1, part1)]
 pub fn part1(input: &str) -> u64 {
-    let (l_list, r_list) = parse(input);
+    let (mut l_list, mut r_list) = parse(input);
+
+    l_list.sort();
+    r_list.sort();
 
     let mut total_diff = 0;
 
-    for (l_value, r_value) in l_list.into_iter().zip(r_list.iter()) {
-        let diff = l_value.abs_diff(*r_value);
+    for (l_value, r_value) in l_list.into_iter().zip(r_list.into_iter()) {
+        let diff = l_value.abs_diff(r_value);
         total_diff += diff;
     }
 
@@ -29,7 +32,10 @@ pub fn part1(input: &str) -> u64 {
 
 #[aoc(day1, part2)]
 pub fn part2(input: &str) -> u64 {
-    let (l_list, r_list) = parse(input);
+    let (mut l_list, mut r_list) = parse(input);
+
+    l_list.sort();
+    r_list.sort();
 
     let mut similarity_score = 0;
 
@@ -53,4 +59,14 @@ pub fn part2(input: &str) -> u64 {
         similarity_score += value * l_count * r_count;
     }
     similarity_score
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part1() {
+        assert_eq!(part1(include_str!("../input/2024/day1-example.txt")), 11);
+    }
 }
