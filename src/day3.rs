@@ -1,26 +1,12 @@
+use aoc_runner_derive::aoc;
 use regex::Regex;
 use std::str::FromStr;
-use std::time::Instant;
 
-const INPUT: &str = include_str!("input.txt");
-
-fn main() {
-    let start = Instant::now();
-
-    let instrs = parse();
-
-    println!("Part 1: {}", part1(&instrs));
-
-    println!("Part 2: {}", part2(&instrs));
-
-    println!("Time: {}μs", start.elapsed().as_micros());
-}
-
-fn parse() -> Vec<Instr> {
+fn parse(input: &str) -> Vec<Instr> {
     let mut instrs = Vec::new();
     let mul = Regex::new(r"(mul)\(([0-9]{1,3}),([0-9]{1,3})\)|(do\(\))|(don't\(\))").unwrap();
 
-    for result in mul.captures_iter(INPUT) {
+    for result in mul.captures_iter(input) {
         let is_mul = result.get(1).is_some_and(|s| !s.is_empty());
         let is_do = result.get(4).is_some_and(|s| !s.is_empty());
         let is_dont = result.get(5).is_some_and(|s| !s.is_empty());
@@ -49,7 +35,10 @@ enum Instr {
     Dont,
 }
 
-fn part1(instructions: &[Instr]) -> u64 {
+#[aoc(day3, part1)]
+pub fn part1(input: &str) -> u64 {
+    let instructions = parse(input);
+
     let mut total = 0;
 
     for instr in instructions {
@@ -61,7 +50,10 @@ fn part1(instructions: &[Instr]) -> u64 {
     total
 }
 
-fn part2(instructions: &[Instr]) -> u64 {
+#[aoc(day3, part2)]
+pub fn part2(input: &str) -> u64 {
+    let instructions = parse(input);
+
     let mut total = 0;
     let mut enable_muls = true;
 

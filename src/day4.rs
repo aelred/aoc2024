@@ -1,22 +1,7 @@
-use std::fmt::Display;
-use std::time::Instant;
+use aoc_runner_derive::aoc;
 
-const INPUT: &str = include_str!("input.txt");
-
-fn main() {
-    let start = Instant::now();
-
-    let wordsearch = parse();
-
-    println!("Part 1: {}", part1(&wordsearch));
-
-    println!("Part 2: {}", part2(&wordsearch));
-
-    println!("Time: {}μs", start.elapsed().as_micros());
-}
-
-fn parse() -> Vec<Vec<char>> {
-    INPUT.lines().map(|line| line.chars().collect()).collect()
+fn parse(input: &str) -> Vec<Vec<char>> {
+    input.lines().map(|line| line.chars().collect()).collect()
 }
 
 const WORD: [char; 4] = ['X', 'M', 'A', 'S'];
@@ -32,7 +17,10 @@ const DIRECTIONS: [[isize; 2]; 8] = [
     [1, -1],
 ];
 
-fn part1(wordsearch: &[Vec<char>]) -> impl Display {
+#[aoc(day4, part1)]
+pub fn part1(input: &str) -> u64 {
+    let wordsearch = parse(input);
+
     let mut matches = 0;
 
     for y in 0..wordsearch.len() {
@@ -43,7 +31,7 @@ fn part1(wordsearch: &[Vec<char>]) -> impl Display {
                 continue;
             }
             for direction in DIRECTIONS {
-                if has_xmas(wordsearch, x, y, direction) {
+                if has_xmas(&wordsearch, x, y, direction) {
                     matches += 1;
                 }
             }
@@ -68,13 +56,16 @@ fn has_xmas(wordsearch: &[Vec<char>], x: usize, y: usize, [dx, dy]: [isize; 2]) 
     true
 }
 
-fn part2(wordsearch: &[Vec<char>]) -> impl Display {
+#[aoc(day4, part2)]
+pub fn part2(input: &str) -> u64 {
+    let wordsearch = parse(input);
+
     let mut matches = 0;
 
     for y in 0..wordsearch.len() {
         let row = &wordsearch[y];
         for x in 0..row.len() {
-            if has_x_mas(wordsearch, x, y) {
+            if has_x_mas(&wordsearch, x, y) {
                 matches += 1;
             }
         }

@@ -1,8 +1,5 @@
-//! Copied from /bin so it works with CodSpeed
-
 use bitvec::bitvec;
 use bitvec::vec::BitVec;
-use std::fmt::Display;
 
 fn parse(input: &str) -> PageRules {
     let mut page_rules = PageRules::default();
@@ -71,8 +68,9 @@ impl DependencyTable {
     }
 }
 
-pub fn part1(input: &str) -> impl Display {
-    let mut page_rules = parse(input);
+#[aoc(day5, part1)]
+pub fn part1(input: &str) -> usize {
+    let page_rules = parse(input);
 
     let mut total = 0;
 
@@ -110,7 +108,8 @@ pub fn part1(input: &str) -> impl Display {
     total
 }
 
-pub fn part2(input: &str) -> impl Display {
+#[aoc(day5, part2)]
+pub fn part2(input: &str) -> usize {
     let mut page_rules = parse(input);
 
     let mut total = 0;

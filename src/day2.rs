@@ -1,27 +1,11 @@
+use aoc_runner_derive::aoc;
 use std::cmp::Ordering;
 use std::str::FromStr;
-use std::time::Instant;
 
-const INPUT: &str = include_str!("input.txt");
-
-fn main() {
-    let start = Instant::now();
-
-    let reports = parse();
-
-    let safe_reports = part1(&reports);
-    println!("Part 1: {}", safe_reports);
-
-    let safe_dampened_reports = part2(&reports);
-    println!("Part 2: {}", safe_dampened_reports);
-
-    println!("Time: {}μs", start.elapsed().as_micros());
-}
-
-fn parse() -> Vec<Report> {
+fn parse(input: &str) -> Vec<Report> {
     let mut reports = Vec::new();
 
-    for line in INPUT.lines() {
+    for line in input.lines() {
         let mut report = Report::default();
 
         for level in line.split_whitespace().collect::<Vec<_>>() {
@@ -39,7 +23,9 @@ struct Report {
     levels: Vec<u64>,
 }
 
-fn part1(reports: &[Report]) -> usize {
+#[aoc(day2, part1)]
+pub fn part1(input: &str) -> usize {
+    let reports = parse(input);
     reports.into_iter().filter(|r| is_safe(r)).count()
 }
 
@@ -63,7 +49,9 @@ fn is_safe(report: &Report) -> bool {
     true
 }
 
-fn part2(reports: &[Report]) -> usize {
+#[aoc(day2, part2)]
+pub fn part2(input: &str) -> usize {
+    let reports = parse(input);
     reports.into_iter().filter(|r| is_safe_dampened(r)).count()
 }
 
