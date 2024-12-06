@@ -70,7 +70,7 @@ impl DependencyTable {
     }
 }
 
-fn part1(input: &str) -> impl Display {
+pub fn part1(input: &str) -> impl Display {
     let mut page_rules = parse(input);
 
     let mut total = 0;
