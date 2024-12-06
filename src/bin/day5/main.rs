@@ -126,11 +126,8 @@ fn part2(page_rules: &mut PageRules) -> impl Display {
     // A value of "false" means there's a dependency
     let mut dependency_table = DependencyTable::new(page_rules.max_pages);
 
-    let mut dependency_map: Vec<Vec<usize>> = vec![Vec::new(); page_rules.max_pages];
-
     for rule in &page_rules.rules {
         dependency_table.set(rule.before, rule.after, false);
-        dependency_map[rule.before].push(rule.after);
     }
 
     // A value of "true" means it satisfies that dependency
@@ -152,7 +149,7 @@ fn part2(page_rules: &mut PageRules) -> impl Display {
         update_table.table |= &dependency_table.table;
 
         if !update_table.table.all() {
-            sort_pages(update, &dependency_table, &dependency_map);
+            sort_pages(update, &dependency_table);
             let middle = update[update.len() / 2];
             total += middle;
         }
@@ -161,11 +158,7 @@ fn part2(page_rules: &mut PageRules) -> impl Display {
     total
 }
 
-fn sort_pages(
-    pages: &mut [usize],
-    dependency_table: &DependencyTable,
-    dependency_map: &[Vec<usize>],
-) {
+fn sort_pages(pages: &mut [usize], dependency_table: &DependencyTable) {
     let mut no_dependencies = Vec::<usize>::new();
     let mut dependency_counts = vec![0; dependency_table.max_pages];
 
@@ -198,8 +191,8 @@ fn sort_pages(
         pages[index] = page;
         index += 1;
 
-        for dependency in &dependency_map[page] {
-            if !pages_absent[*dependency] {
+        for dependency in pages.iter() {
+            if dependency_table.table[dependency * dependency_table.max_pages + page] {
                 dependency_counts[*dependency] -= 1;
                 if dependency_counts[*dependency] == 0 {
                     no_dependencies.push(*dependency);
