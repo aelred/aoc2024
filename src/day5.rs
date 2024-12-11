@@ -1,3 +1,4 @@
+use aoc_runner_derive::aoc;
 use bitvec::bitvec;
 use bitvec::vec::BitVec;
 
